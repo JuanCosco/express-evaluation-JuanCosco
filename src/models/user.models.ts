@@ -13,3 +13,16 @@ export async function findUserByUsername(username: string) {
   const { rows } = await db.query(query, [username]);
   return rows[0];
 }
+
+//Gestión de Perfil de Usuario
+
+export async function getUserbyID(id: number) {
+  const result = await db.query(
+    `SELECT id, username, email, firstName, lastName,createdat,updatedat
+       FROM users
+       WHERE id = $1`,
+       [id]
+  );
+
+  return result.rows[0];
+}

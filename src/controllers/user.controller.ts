@@ -1,23 +1,21 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
-import { db } from "../db";
+import { getUserbyID } from "../models/user.models";
 
 export async function getMyProfile(req: AuthRequest, res: Response) {
   try {
     const userId = req.user?.userId;
 
     if (!userId) {
-      return res.status(401).json({ ok: false, message: "Usuario no autenticado" });
+      return res.status(401).json({ 
+        ok: false, 
+        message: "Usuario no autenticado",
+        });
     }
 
-    const result = await db.query(
-      `SELECT id, username, email, firstName, lastName,createdat,updatedat
-       FROM users
-       WHERE id = $1`,
-      [userId]
-    );
+    const user = await getUserbyID(userId);
 
-    if (result.rowCount === 0) {
+    if (!user) {
       return res.status(404).json({
         ok: false,
         message: "Usuario no encontrado",
@@ -26,7 +24,7 @@ export async function getMyProfile(req: AuthRequest, res: Response) {
 
     return res.json({
       ok: true,
-      data: result.rows[0],
+      data: user,
     });
   } catch (error) {
     console.error(error);
