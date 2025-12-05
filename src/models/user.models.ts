@@ -49,3 +49,11 @@ export async function actUserID(id: number, data: any) {
   const result = await db.query(sql, values);
   return result.rows[0];
 }
+
+export async function deleteUserID(id: number) {
+  const result = await db.query(
+    `DELETE FROM users WHERE id = $1 RETURNING id`,
+    [id]
+  );
+  return result.rows[0];
+}
