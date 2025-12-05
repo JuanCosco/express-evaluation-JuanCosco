@@ -58,7 +58,7 @@ export async function actualizarPerfil(req: AuthRequest, res: Response) {
 
     if (email !== undefined) updates.email = email;
     if (firstname !== undefined) updates.firstname = firstname;
-    if (lastname !== undefined) updates.lastName = lastname;
+    if (lastname !== undefined) updates.lastname = lastname;
 
     if (Object.keys(updates).length === 0) {
       // Se usa para actualizar al menos un dato
