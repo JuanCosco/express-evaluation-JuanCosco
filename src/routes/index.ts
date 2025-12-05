@@ -12,7 +12,7 @@ const router = Router();
 router.use("/test", testRuta);
 router.use("/users", userRuta);
 router.use("/posts", postRuta);
-router.use("/likes", likeRuta);
+router.use("/posts", likeRuta);
 router.use("/auth", authRuta);
 
 export default router;
