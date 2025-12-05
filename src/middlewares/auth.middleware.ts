@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export interface AuthRequest extends Request {
-    user?: any;
+    user?: { id: number };
 }
 
 export function verifyToken(req: AuthRequest, res: Response, next: NextFunction) {
@@ -26,9 +26,13 @@ export function verifyToken(req: AuthRequest, res: Response, next: NextFunction)
     }
 
     try {
-        const decoded = jwt.verify(token, process.env["JWT_SECRET"]!);
-        req.user = decoded;
-         return next();
+        const decoded = jwt.verify(token, process.env["JWT_SECRET"]!) as any;
+        req.user = { id: decoded.userId };
+
+        console.log("decoded", decoded);
+        console.log("req.user", req.user);
+
+        return next();
 
     } catch (error) {
         return res.status(401).json({

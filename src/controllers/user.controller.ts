@@ -1,10 +1,11 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
 import { getUserID } from "../models/user.models";
+import { actUserID } from "../models/user.models";
 
 export async function mostrarPerfil(req: AuthRequest, res: Response) {
   try {
-    const userId = req.user?.userId;
+    const userId = req.user?.id;
 
     if (!userId) {
       return res.status(401).json({
@@ -35,6 +36,49 @@ export async function mostrarPerfil(req: AuthRequest, res: Response) {
   }
 }
 
-export async function actualizarPerfil() {
+export async function actualizarPerfil(req: AuthRequest, res: Response) {
+  try {
+    const userId = req.user?.id;
 
+    if (!userId) {
+      return res.status(401).json({
+        ok: false,
+        message: "Usuario no autenticado",
+      });
+    }
+
+    const { email, firstname, lastname } = req.body;
+
+    
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user);
+
+    // validar campos permitidos
+    const updates: any = {};
+
+    if (email !== undefined) updates.email = email;
+    if (firstname !== undefined) updates.firstname = firstname;
+    if (lastname !== undefined) updates.lastName = lastname;
+
+    if (Object.keys(updates).length === 0) {
+      // Se usa para actualizar al menos un dato
+      return res.status(400).json({
+        ok: false,
+        message: "Debe enviar al menos un campo para actualizar",
+      });
+    }
+
+    const updateUser = await actUserID(userId, updates);
+
+    return res.json({
+      ok: true,
+      data: updateUser,
+    });
+  } catch (error) {
+    console.error("ERROR EN actualizarPerfil:", error);
+    return res.status(500).json({
+      ok: false,
+      message: "Error al actualizar el perfil",
+    });
+  }
 }

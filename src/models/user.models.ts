@@ -35,17 +35,17 @@ export async function actUserID(id: number, data: any) {
     fields.push(`"${key}" = $${idx}`);
     values.push(data[key]);
     idx++;
-  } 
+  }
 
   values.push(id);
 
   const sql = `
-  UPDATE users
-  SET ${fields.join(", ")}, "updatedat" = NOW() 
-  WHERE id = $${idx}
-  RETURNING id, username, email, "firstName", "lastName", role, "createdat", "updatedat"
+    UPDATE users
+    SET ${fields.join(", ")}, "updatedat" = NOW() 
+    WHERE id = $${idx}
+    RETURNING id, username, email, "firstname", "lastname", role, "createdat", "updatedat"
   `;
 
-  const result = await db.query(sql,values);
+  const result = await db.query(sql, values);
   return result.rows[0];
 }
