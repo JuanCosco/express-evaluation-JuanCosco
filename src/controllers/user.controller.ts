@@ -1,19 +1,19 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
-import { getUserbyID } from "../models/user.models";
+import { getUserID } from "../models/user.models";
 
-export async function getMyProfile(req: AuthRequest, res: Response) {
+export async function mostrarPerfil(req: AuthRequest, res: Response) {
   try {
     const userId = req.user?.userId;
 
     if (!userId) {
-      return res.status(401).json({ 
-        ok: false, 
+      return res.status(401).json({
+        ok: false,
         message: "Usuario no autenticado",
-        });
+      });
     }
 
-    const user = await getUserbyID(userId);
+    const user = await getUserID(userId);
 
     if (!user) {
       return res.status(404).json({
@@ -33,4 +33,8 @@ export async function getMyProfile(req: AuthRequest, res: Response) {
       message: "Error interno del servidor",
     });
   }
+}
+
+export async function actualizarPerfil() {
+
 }

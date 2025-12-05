@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { createUser, findUserByUsername } from "../models/user.models";
+import { createUser, getUser } from "../models/user.models";
 import { loginUser } from "../models/auth.model";
 import { hashPassword } from "../utils/hash.util";
 
-export async function controladorSignup(
+export async function signup(
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,7 +18,7 @@ export async function controladorSignup(
     }
 
     // Verificar si existe usuario
-    const usuarioCreado = await findUserByUsername(username);
+    const usuarioCreado = await getUser(username);
 
     if (usuarioCreado) {
       return res.status(400).json({ message: "El usuario ya existe" });
