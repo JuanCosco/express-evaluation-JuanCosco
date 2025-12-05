@@ -24,3 +24,14 @@ export async function createLike(userId: number, postId: number) {
     const result = await db.query(sql, [userId, postId]);
     return result.rows[0];
 }
+
+//Quitar like
+export async function removeLike(userId: number, postId: number) {
+    const sql = `
+    DELETE FROM likes
+    WHERE "userid" = $1 AND "postid" = $2
+    RETURNING id
+  `;
+    const result = await db.query(sql, [userId, postId]);
+    return result.rows[0];
+}
