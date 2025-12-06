@@ -1,6 +1,6 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
-import { getUserID, actUserID, deleteUserID } from "../models/user.models";
+import { getUserID, actUserID, deleteUserID, getAllUsers } from "../models/user.models";
 
 export async function mostrarPerfil(req: AuthRequest, res: Response) {
   try {
@@ -110,6 +110,25 @@ export async function eliminarPerfil(req: AuthRequest, res: Response) {
     return res.status(500).json({
       ok: false,
       message: "Error al eliminar la cuenta",
+    });
+  }
+}
+
+// Todos los usuarios administradores pueden ver todos los perfiles
+export async function verTodosPerfiles(_req: AuthRequest, res: Response) {
+  try {
+    const users = await getAllUsers();
+    
+    return res.json({
+      ok: true,
+      data: users,
+    });
+    
+  } catch (error) {
+    console.error("ERROR EN mostrar los usuarios:", error);
+    return res.status(500).json({
+      ok: false,
+      message: "Error al mostrar los usuarios",
     });
   }
 }

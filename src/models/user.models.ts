@@ -57,3 +57,16 @@ export async function deleteUserID(id: number) {
   );
   return result.rows[0];
 }
+
+
+//Administración de Usuarios (lista de usuarios)
+
+export async function getAllUsers() {
+  const sql = `
+    SELECT id, username, email, role, "createdat", "updatedat"
+    FROM users
+    ORDER BY id
+  `;
+  const result = await db.query(sql);
+  return result.rows;
+}

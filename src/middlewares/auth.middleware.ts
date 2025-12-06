@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 export interface AuthRequest extends Request {
-  user?: { id: number };
+  user?: { id: number, role: string };
 }
 
 export function verifyToken(
@@ -30,13 +30,17 @@ export function verifyToken(
 
   try {
     const decoded = jwt.verify(token, process.env["JWT_SECRET"]!) as any;
-    req.user = { id: decoded.userId };
+    req.user = { 
+      id: decoded.userId,
+      role: decoded.role
+     };
 
     console.log("decoded", decoded);
     console.log("req.user", req.user);
 
     return next();
   } catch (error) {
+    console.error("Error verifying token:", error);
     return res.status(401).json({
       ok: false,
       error: "Token inválido o expirado",
