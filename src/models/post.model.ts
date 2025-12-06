@@ -52,3 +52,7 @@ export async function actIdPost(postId: number, content: string) {
     const result = await db.query(sql, [content, postId]);
     return result.rows[0];
 }
+
+//Visualización de Posts
+
+// Obtener lista de posts con paginación
