@@ -3,11 +3,7 @@ import { createUser, getUser } from "../models/user.models";
 import { loginUser } from "../models/auth.model";
 import { hashPassword } from "../utils/hash.util";
 
-export async function signup(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+export async function signup(req: Request, res: Response, next: NextFunction) {
   try {
     const { username, password } = req.body;
 

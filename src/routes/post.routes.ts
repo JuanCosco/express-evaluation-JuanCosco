@@ -5,7 +5,7 @@ import { crearPost, actualizarPost, listarPosts, listarPostUsuario } from "../co
 const router = Router();
 
 // rutas para posts
-router.post("/", verifyToken ,crearPost);
+router.post("/", verifyToken, crearPost);
 router.patch("/:id", verifyToken, actualizarPost);
 router.get("/", listarPosts);
 router.get("/:username", listarPostUsuario);

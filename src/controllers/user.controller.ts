@@ -1,8 +1,6 @@
 import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
-import { getUserID } from "../models/user.models";
-import { actUserID } from "../models/user.models";
-import { deleteUserID } from "../models/user.models";
+import { getUserID, actUserID, deleteUserID } from "../models/user.models";
 
 export async function mostrarPerfil(req: AuthRequest, res: Response) {
   try {
@@ -49,7 +47,6 @@ export async function actualizarPerfil(req: AuthRequest, res: Response) {
     }
 
     const { email, firstname, lastname } = req.body;
-
 
     console.log("BODY:", req.body);
     console.log("USER:", req.user);
@@ -103,17 +100,15 @@ export async function eliminarPerfil(req: AuthRequest, res: Response) {
         message: "Usuario no encontrado",
       });
     }
-    
+
     return res.json({
       ok: true,
     });
-
   } catch (error) {
     console.error("ERROR EN eliminar:", error);
     return res.status(500).json({
       ok: false,
       message: "Error al eliminar la cuenta",
     });
-
   }
 }

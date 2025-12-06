@@ -16,22 +16,22 @@ export async function alreadyLike(userId: number, postId: number) {
 
 // Crear like
 export async function createLike(userId: number, postId: number) {
-    const sql = `
+  const sql = `
     INSERT INTO likes ("userid", "postid", "createdat")
     VALUES ($1, $2, NOW())
     RETURNING id
   `;
-    const result = await db.query(sql, [userId, postId]);
-    return result.rows[0];
+  const result = await db.query(sql, [userId, postId]);
+  return result.rows[0];
 }
 
 //Quitar like
 export async function removeLike(userId: number, postId: number) {
-    const sql = `
+  const sql = `
     DELETE FROM likes
     WHERE "userid" = $1 AND "postid" = $2
     RETURNING id
   `;
-    const result = await db.query(sql, [userId, postId]);
-    return result.rows[0];
+  const result = await db.query(sql, [userId, postId]);
+  return result.rows[0];
 }
