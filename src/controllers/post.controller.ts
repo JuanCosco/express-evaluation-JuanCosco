@@ -1,6 +1,7 @@
-import { Response } from "express";
+import {  Request, Response } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
-import { createPost, getPostId, actIdPost, getIdPost, getAllPosts } from "../models/post.model";
+import { createPost, getPostId, actIdPost, getIdPost, getAllPosts, getPostUser } from "../models/post.model";
+import { getUser } from "../models/user.models";
 
 export async function crearPost(req: AuthRequest, res: Response) {
     try {
@@ -102,7 +103,7 @@ export async function actualizarPost(req: AuthRequest, res: Response) {
 }
 
 //Listar Posts
-export async function listarPosts(req: AuthRequest, res: Response) {
+export async function listarPosts(req: Request, res: Response) {
     try {
         const page = parseInt(req.query["page"] as string) || 1;
         const limit = parseInt(req.query["limit"] as string) || 10;
@@ -118,7 +119,37 @@ export async function listarPosts(req: AuthRequest, res: Response) {
         console.error("ERROR EN listar:", error);
         return res.status(500).json({
             ok: false,
-            message: "Error al crear el post",
+            message: "Error al listar los post",
+        });
+    }
+}
+
+export async function listarPostUsuario(req: Request, res: Response) {
+    try {
+        const username = req.params["username"];
+
+        //Validar usuario
+        const user = await getUser(username);
+
+        if (!user) {
+            return res.status(404).json({
+                ok: false,
+                message: "Usuario no encontrado",
+            });
+        }
+        
+        const posts = await getPostUser(username);
+
+        return res.status(200).json({
+            ok: true,
+            data: posts
+        });
+        
+    } catch (error) {
+        console.error("ERROR EN listar por usuario:", error);
+        return res.status(500).json({
+            ok: false,
+            message: "Error al obtener los posts del usuario",
         });
     }
 }

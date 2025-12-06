@@ -1,18 +1,18 @@
 import { db } from "../db";
 
 export async function createPost(userId: number, content: string) {
-    const sql = `
+  const sql = `
     INSERT INTO posts ("userid", content, "createdat", "updatedat")
     VALUES ($1, $2, NOW(), NOW())
     RETURNING id, content, "createdat", "updatedat", "userid"
   `;
 
-    const result = await db.query(sql, [userId, content]);
-    return result.rows[0];
+  const result = await db.query(sql, [userId, content]);
+  return result.rows[0];
 }
 
 export async function getPostId(postId: number) {
-    const sql = `
+  const sql = `
      SELECT 
       p.id,
       p.content,
@@ -29,36 +29,36 @@ export async function getPostId(postId: number) {
     WHERE p.id = $1
   `;
 
-    const result = await db.query(sql, [postId]);
-    return result.rows[0];
+  const result = await db.query(sql, [postId]);
+  return result.rows[0];
 }
 
 //PATCH /posts/:id (Editar Post Existente)
 
 export async function getIdPost(id: number) {
-    const sql = `SeLECT * FROM posts WHERE id = $1`;
-    const result = await db.query(sql, [id]);
-    return result.rows[0];
+  const sql = `SeLECT * FROM posts WHERE id = $1`;
+  const result = await db.query(sql, [id]);
+  return result.rows[0];
 }
 
 export async function actIdPost(postId: number, content: string) {
-    const sql = `
+  const sql = `
     UPDATE posts
     SET content = $1, "updatedat" = NOW()
     WHERE id = $2
     RETURNING id, content, "createdat", "updatedat", "userid"
   `;
 
-    const result = await db.query(sql, [content, postId]);
-    return result.rows[0];
+  const result = await db.query(sql, [content, postId]);
+  return result.rows[0];
 }
 
 //Visualización de Posts
 
 // Obtener lista de posts con paginación
 export async function getAllPosts(page: number, limit: number) {
-    const offset = (page - 1) * limit;
-    const sql = `
+  const offset = (page - 1) * limit;
+  const sql = `
     SELECT
       p.id,
       p.content,
@@ -75,7 +75,30 @@ export async function getAllPosts(page: number, limit: number) {
     ORDER BY p."createdat" DESC
     LIMIT $1 OFFSET $2
   `;
-  
-    const result = await db.query(sql, [limit, offset]);
-    return result.rows;
+
+  const result = await db.query(sql, [limit, offset]);
+  return result.rows;
+}
+
+// (Ver Posts de Usuario Específico)
+export async function getPostUser(username: string) {
+  const sql = `
+  SELECT 
+    p.id,
+    p.content,
+    p."createdat",
+    p."updatedat",
+    u.username,
+    (
+      SELECT COUNT(*)
+      FROM likes l
+      WHERE l."postid" = p.id
+    ) AS "likesCount"
+    FROM posts p
+    JOIN users u ON u.id = p."userid"
+    WHERE u.username = $1
+    ORDER BY p."createdat" DESC
+    `;
+  const result = await db.query(sql, [username]);
+  return result.rows;
 }
