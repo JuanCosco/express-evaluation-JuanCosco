@@ -56,3 +56,26 @@ export async function actIdPost(postId: number, content: string) {
 //Visualización de Posts
 
 // Obtener lista de posts con paginación
+export async function getAllPosts(page: number, limit: number) {
+    const offset = (page - 1) * limit;
+    const sql = `
+    SELECT
+      p.id,
+      p.content,
+      p."createdat",
+      p."updatedat",
+      u.username,
+      (
+        SELECT COUNT(*)
+        FROM likes l
+        WHERE l."postid" = p.id
+      ) AS "likesCount"
+    FROM posts p
+    JOIN users u ON u.id = p."userid"
+    ORDER BY p."createdat" DESC
+    LIMIT $1 OFFSET $2
+  `;
+  
+    const result = await db.query(sql, [limit, offset]);
+    return result.rows;
+}

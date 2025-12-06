@@ -1,6 +1,6 @@
-import  { Response } from "express";
+import { Response } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware";
-import { createPost, getPostId, actIdPost, getIdPost } from "../models/post.model";
+import { createPost, getPostId, actIdPost, getIdPost, getAllPosts } from "../models/post.model";
 
 export async function crearPost(req: AuthRequest, res: Response) {
     try {
@@ -94,6 +94,28 @@ export async function actualizarPost(req: AuthRequest, res: Response) {
 
     } catch (error) {
         console.error("ERROR EN actualizar:", error);
+        return res.status(500).json({
+            ok: false,
+            message: "Error al crear el post",
+        });
+    }
+}
+
+//Listar Posts
+export async function listarPosts(req: AuthRequest, res: Response) {
+    try {
+        const page = parseInt(req.query["page"] as string) || 1;
+        const limit = parseInt(req.query["limit"] as string) || 10;
+
+        const posts = await getAllPosts(page, limit);
+
+        return res.status(200).json({
+            ok: true,
+            posts: posts,
+        });
+
+    } catch (error) {
+        console.error("ERROR EN listar:", error);
         return res.status(500).json({
             ok: false,
             message: "Error al crear el post",
