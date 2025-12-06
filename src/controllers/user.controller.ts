@@ -46,7 +46,7 @@ export async function actualizarPerfil(req: AuthRequest, res: Response) {
       });
     }
 
-    const { email, firstname, lastname } = req.body;
+    const { email, firstname, lastname, role } = req.body;
 
     console.log("BODY:", req.body);
     console.log("USER:", req.user);
@@ -57,6 +57,7 @@ export async function actualizarPerfil(req: AuthRequest, res: Response) {
     if (email !== undefined) updates.email = email;
     if (firstname !== undefined) updates.firstname = firstname;
     if (lastname !== undefined) updates.lastname = lastname;
+    if (role !== undefined) updates.role = role;
 
     if (Object.keys(updates).length === 0) {
       // Se usa para actualizar al menos un dato
