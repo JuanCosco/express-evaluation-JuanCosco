@@ -36,3 +36,4 @@ Este proyecto es una API REST desarrollada con **Node.js**, **Express**, **Postg
 
 ---
 
+Se envía desde el archivo principal del proyecto el archivo de insomnia y la base de datos usada hasta ahora.
